@@ -64,8 +64,10 @@ do
 		
 done
 
-if [ -f $mailfile ]
+# se vc tem um script par enviar e-mails, coloque aí embaixo
+mailscript="sendmail.py"
+if [ -f $mailfile -a -f $mailscript ]
 then
-	/usr/bin/python sendmail.py "renatolmorais@gmail.com" "Novas URLs encontradas!" $mailfile
+	/usr/bin/python $mailscript "renatolmorais@gmail.com" "Novas URLs encontradas!" $mailfile
 fi
 
