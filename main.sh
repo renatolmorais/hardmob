@@ -22,6 +22,8 @@ hardmoburl="https://www.hardmob.com.br/forums/407-Promocoes"
 mainurl="https://www.hardmob.com.br"
 urlfile="urls.txt"
 md5urlfile="md5-$urlfile"
+mailfile="email.txt"
+[[ -f $mailfile ]] && rm -f $mailfile
 
 regex=`cat keywords.txt  | awk '
 BEGIN {
@@ -56,7 +58,14 @@ do
 		echo "Nova url encontrada..."
 		echo "$promourl"
 		echo $promourl >> $urlfile
+		echo $promourl >> $mailfile
 		echo $md5url >> $md5urlfile
 	fi
 		
 done
+
+if [ -f $mailfile ]
+then
+	/usr/bin/python sendmail.py "renatolmorais@gmail.com" "Novas URLs encontradas!" $mailfile
+fi
+

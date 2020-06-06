@@ -1,3 +1,4 @@
 *.txt
 config.sh
 *.html
+sendmail.py
