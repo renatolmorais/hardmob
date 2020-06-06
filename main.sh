@@ -1,11 +1,21 @@
 #!/bin/bash
 
+config_file="config.sh"
+
+if [ ! -f $config_file ]
+then
+	echo "faltou o arquivo de configuracao $config_file"
+	exit 1
+else
+	. $config_file
+fi
+
 keywords="keywords.txt"
 
 if [ ! -f $keywords ]
 then
 	echo "faltou o arquivo $keywords"
-	exit 1
+	exit 2
 fi
 
 hardmoburl="https://www.hardmob.com.br/forums/407-Promocoes"
@@ -36,7 +46,7 @@ END {
 }
 '`
 
-curl -k "$hardmoburl" 2> /dev/null | egrep -i "$regex" | grep -P 'href="(.*?)"' -o | cut -d" " -f1 | cut -d"=" -f2- | tr -d "\"" | sort | uniq | while read url
+curl $socks -k "$hardmoburl" 2> /dev/null | egrep -i "$regex" | grep -P 'href="(.*?)"' -o | cut -d" " -f1 | cut -d"=" -f2- | tr -d "\"" | sort | uniq | while read url
 do
 	promourl="$mainurl/$url"
 	md5url=`echo $promourl | md5sum -t 2> /dev/null | tr -s " " | cut -d "-" -f1`
