@@ -66,8 +66,8 @@ done
 
 # se vc tem um script par enviar e-mails, coloque aí embaixo
 mailscript="sendmail.py"
-if [ -f $mailfile -a -f $mailscript ]
+if [ -f $mailfile -a -f $mailscript -a ! -z $maildest ]
 then
-	/usr/bin/python $mailscript "renatolmorais@gmail.com" "Novas URLs encontradas!" $mailfile
+	/usr/bin/python $mailscript $maildest "Novas URLs encontradas!" $mailfile
 fi
 
