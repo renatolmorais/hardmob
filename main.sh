@@ -28,6 +28,7 @@ urlfile="$apppath/urls.txt"
 md5urlfile="$apppath/md5-urls.txt"
 threadfile="$apppath/threads.txt"
 mailfile="$apppath/email.txt"
+excludefile="$apppath/exclude.txt"
 [[ -f $mailfile ]] && rm -f $mailfile
 
 regex=`cat "$apppath/$keywords"  | awk '
@@ -58,7 +59,7 @@ do
 	if [ ! $(echo "$url" | fgrep "$mainurl" -o > /dev/null 2>&1 ; echo $?) = 0 ]
 	then
 		exclude="1"
-		for ex_url in `cat exclude.txt`
+		for ex_url in `cat $excludefile`
 		do
 			echo -e "URL:\t\t\t$url"
 			exclude="$(echo $url | fgrep $ex_url > /dev/null 2>&1;echo $?)"
