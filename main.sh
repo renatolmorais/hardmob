@@ -55,21 +55,38 @@ END {
 
 curl $socks -k "$hardmoburl" 2> /dev/null | egrep -i "$regex" | grep -P 'href="(.*?)"' -o | cut -d" " -f1 | cut -d"=" -f2- | tr -d "\"" | sort | uniq | while read url
 do
-	promourl="$mainurl/$url"
-	thread=`echo "$promourl" | grep -P "https://www.hardmob.com.br/threads/([0-9]+).*?" -o | cut -d "/" -f5`
-	md5url=`echo $promourl | md5sum -t 2> /dev/null | tr -s " " | cut -d "-" -f1`
-	#retval="$(fgrep $md5url $md5urlfile > /dev/null 2>&1 ; echo $?)"
-	retval="$(fgrep $thread $threadfile > /dev/null 2>&1 ; echo $?)"
-	if [ ! "$retval" = "0" ]
+	if [ ! $(echo "$url" | fgrep "$mainurl" -o > /dev/null 2>&1 ; echo $?) = 0 ]
 	then
-		echo "Nova url encontrada..."
-		echo "$promourl"
-		echo $promourl >> $urlfile
-		echo $promourl >> $mailfile
-		echo $md5url >> $md5urlfile
-		echo $thread >> $threadfile
-	fi
-		
+		exclude="1"
+		for ex_url in `cat exclude.txt`
+		do
+			echo -e "URL:\t\t\t$url"
+			exclude="$(echo $url | fgrep $ex_url > /dev/null 2>&1;echo $?)"
+			if [ $exclude = 0 ]
+			then
+				echo -e "URL excluída:\t\t$ex_url"
+				break
+			fi
+		done
+		if [ $exclude = 1 ]
+		then
+			promourl="$mainurl/$url"
+			thread=`echo "$promourl" | grep -P "https://www.hardmob.com.br/threads/([0-9]+).*?" -o | cut -d "/" -f5`
+			md5url=`echo $promourl | md5sum -t 2> /dev/null | tr -s " " | cut -d "-" -f1`
+			#retval="$(fgrep $md5url $md5urlfile > /dev/null 2>&1 ; echo $?)"
+			retval="$(fgrep $thread $threadfile > /dev/null 2>&1 ; echo $?)"
+			if [ ! "$retval" = "0" ]
+			then
+				echo -e "Nova url encontrada\t$promourl"
+				echo $promourl >> $urlfile
+				echo $promourl >> $mailfile
+				echo $md5url >> $md5urlfile
+				echo $thread >> $threadfile
+			else
+				echo -e "URL já existente:\t$promourl"
+			fi
+		fi
+	fi		
 done
 
 # se vc tem um script par enviar e-mails, coloque aí embaixo
