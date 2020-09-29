@@ -31,30 +31,10 @@ mailfile="$apppath/email.txt"
 excludefile="$apppath/exclude.txt"
 [[ -f $mailfile ]] && rm -f $mailfile
 
-regex=`cat "$apppath/$keywords"  | awk '
-BEGIN {
-        IRS = "\n" ;
-        IFS = " " ;
-        ORS = "";
-}
-{
-        if (NR > 1)
-        {
-                print "|"
-                print $1
-        }
-        else
-        {
-		print "("
-                print $1
-        }
-}
-END {
-	print ")"
-}
-'`
+regexon="`$apppath/build_regex.sh`"
+regexoff="`$apppath/build_regex.sh off`"
 
-curl $socks -k "$hardmoburl" 2> /dev/null | egrep -i "$regex" | grep -P 'href="(.*?)"' -o | cut -d" " -f1 | cut -d"=" -f2- | tr -d "\"" | sort | uniq | while read url
+curl $socks -k "$hardmoburl" 2> /dev/null | egrep -i "$regexon" | egrep -iv $regexoff | grep -P 'href="(.*?)"' -o | cut -d" " -f1 | cut -d"=" -f2- | tr -d "\"" | sort | uniq | while read url
 do
 	if [ ! $(echo "$url" | fgrep "$mainurl" -o > /dev/null 2>&1 ; echo $?) = 0 ]
 	then
