@@ -10,3 +10,18 @@ Agora é possível enviar e-mails após encontrar urls. Entretanto, o script que
 
 UPDATE 07/06/2020
 Agora o controle é feito pelo número da thread. Assim evita-se links repetidos.
+
+UPDATE 29/09/2020
+Agora é possível incluir keywords para filtrar o resultado final, excluindo aquilo que não se deseja.
+Exemplo: eu quis utilizar o programa para pesquisar condiconadores de ar.
+Então coloquei samsung como keywork.
+Entretanto, estavam sendo retornados "monitores" e "celulares".
+Então criei um artificío para não retornar esses resultados.
+As keywords que NÃO DEVEM ser retornadas agoram são inclídas com um "-" na frente, e as que DEVEM ser retornadas são incluídas com um "+" na frente.
+Ex:
++samsung
++condicionado
++gree
+-monitor
+-celular
+-tablet
