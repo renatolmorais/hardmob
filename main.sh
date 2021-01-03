@@ -34,7 +34,7 @@ excludefile="$apppath/exclude.txt"
 regexon="`$apppath/build_regex.sh`"
 regexoff="`$apppath/build_regex.sh off`"
 
-curl $socks -k "$hardmoburl" 2> /dev/null | egrep -i "$regexon" | egrep -iv $regexoff | grep -P 'href="(.*?)"' -o | cut -d" " -f1 | cut -d"=" -f2- | tr -d "\"" | sort | uniq | while read url
+curl $socks -k "$hardmoburl" 2> /dev/null | egrep -i "$regexon" | egrep -iv $regexoff | grep -iP 'href="(.*?)"' -o | cut -d" " -f1 | cut -d"=" -f2- | tr -d "\"" | sort | uniq | while read url
 do
 	if [ ! $(echo "$url" | fgrep "$mainurl" -o > /dev/null 2>&1 ; echo $?) = 0 ]
 	then
@@ -71,10 +71,11 @@ do
 done
 
 # se vc tem um script par enviar e-mails, coloque aí embaixo
-mailscript="$apppath/sendmail.py"
+
+mailscript="/usr/local/awsmail/awsMail.py"
 if [ -f $mailfile -a -f $mailscript -a ! -z $maildest ]
 then
 	echo "enviando e-mail..."
-	/usr/bin/python $mailscript $maildest "Novas URLs encontradas!" $mailfile
+	/usr/bin/python $mailscript -d $maildest -s "Novas URLs encontradas!" "`cat $mailfile`"
 fi
 
