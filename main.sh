@@ -29,6 +29,7 @@ md5urlfile="$apppath/md5-urls.txt"
 threadfile="$apppath/threads.txt"
 mailfile="$apppath/email.txt"
 excludefile="$apppath/exclude.txt"
+hardmondconfigfile="$apppath/hardmob.ini"
 [[ -f $mailfile ]] && rm -f $mailfile
 
 regexon="`$apppath/build_regex.sh`"
@@ -76,6 +77,6 @@ mailscript="/usr/local/awsmail/awsMail.py"
 if [ -f $mailfile -a -f $mailscript -a ! -z $maildest ]
 then
 	echo "enviando e-mail..."
-	/usr/bin/python $mailscript -d $maildest -s "Novas URLs encontradas!" "`cat $mailfile`"
+	/usr/bin/python $mailscript -c $hardmondconfigfile -d $maildest -s "Novas URLs encontradas!" "`cat $mailfile`"
 fi
 
