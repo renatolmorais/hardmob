@@ -4,3 +4,4 @@ config.sh
 sendmail.py
 consulta.sh
 teste.sh
+*.ini
